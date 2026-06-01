@@ -20,6 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('route_manager.urls')),
-    # Mount the app also at /route-manager/ for users using a hyphenated path
-    path('route-manager/', include('route_manager.urls')),
+    
 ]
