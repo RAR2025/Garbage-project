@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
-from .models import Shop
+from .models import Shop, Edge
 from .forms import ShopWeightForm
 from django.shortcuts import get_object_or_404
 import  json
@@ -46,3 +46,17 @@ def update_shop_weight(request, pk):
         form.save()
         return JsonResponse({"status" : "ok"})
     return JsonResponse({"errors": form.errors})
+
+class EdgeListJsonView(View):
+    def get(self, request, *args, **kwargs):
+        edges = list(
+            Edge.objects.select_related("from_shop", "to_shop").values(
+                "id",
+                "distance_km",
+                "from_shop_id",
+                "to_shop_id",
+                "from_shop__name",
+                "to_shop__name",
+            )
+        )
+        return JsonResponse(edges, safe=False)
