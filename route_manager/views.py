@@ -7,7 +7,7 @@ from .models import Shop, Edge
 from .forms import ShopWeightForm
 from django.shortcuts import get_object_or_404
 import  json
-from .models import Shop
+
 
 
 # Create your views here.

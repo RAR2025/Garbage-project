@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Shop(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     lat = models.FloatField()
     lng = models.FloatField()
