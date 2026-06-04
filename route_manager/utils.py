@@ -1,6 +1,6 @@
 from .models import Shop, Edge
 
-    
+
 def build_graph():
     graph = {
         shop.id: []
