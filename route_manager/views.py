@@ -7,6 +7,8 @@ from .models import Shop, Edge
 from .forms import ShopWeightForm
 from django.shortcuts import get_object_or_404
 import  json
+from .utils import build_graph
+from .astart import astar
 
 
 
@@ -60,3 +62,25 @@ class EdgeListJsonView(View):
             )
         )
         return JsonResponse(edges, safe=False)
+    
+
+def compute_route(request, start_id, end_id):
+    graph = build_graph()
+    result = astar(
+        graph, start_id, end_id
+    )
+
+    if result is None:
+        return JsonResponse(
+            {
+                "error": "no route found",
+                "route": [],
+                "total_distance": None
+            },
+            status = 404
+        )
+
+    return JsonResponse({
+        "route": result["path"],
+        "total_distance": result["cost"]
+    })
