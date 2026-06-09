@@ -12,10 +12,8 @@ from .astart import astar
 
 
 
-# Create your views here.
-def index(request):
-    # templates/index.html exists at project root templates/, so render that
-    return render(request, 'index.html')
+def map_view(request):
+    return render(request, "map.html")
 
 class ShopListJsonView(View):
     def get(self, request, *args, **kwargs):
