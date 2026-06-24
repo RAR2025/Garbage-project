@@ -57,6 +57,10 @@ class EdgeListJsonView(View):
                 "to_shop_id",
                 "from_shop__name",
                 "to_shop__name",
+                "from_shop__lat",
+                "from_shop__lng",
+                "to_shop__lat",
+                "to_shop__lng",
             )
         )
         return JsonResponse(edges, safe=False)

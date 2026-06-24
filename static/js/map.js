@@ -11,6 +11,7 @@ L.tileLayer(
 ).addTo(map);
 
 const shopsLayer = L.layerGroup().addTo(map);
+const edgesLayer = L.layerGroup().addTo(map);
 
 function loadShops() {
     fetch("/api/shops/")
@@ -32,4 +33,23 @@ function loadShops() {
         .catch(error => console.error("Error loading shops:", error));
 }
 
-loadShops();
+function loadEdges() {
+    fetch("/api/edges/")
+        .then(response => response.json())
+        .then(data => {
+            edgesLayer.clearLayers();
+            data.forEach(edge => {
+                const latlngs = [
+                    [edge.from_shop__lat, edge.from_shop__lng],
+                    [edge.to_shop__lat, edge.to_shop__lng]
+                ];
+                const polyline = L.polyline(latlngs, {color: 'gray', weight: 2});
+                polyline.bindTooltip(`${edge.distance_km} km`);
+                edgesLayer.addLayer(polyline);
+            });
+        })
+        .catch(error => console.error("Error loading edges:", error));
+}
+
+loadShops();
+loadEdges();
