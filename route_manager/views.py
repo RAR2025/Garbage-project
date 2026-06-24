@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 import  json
 from .utils import build_graph
 from .astart import astar
+from .route_planner import generate_priority_route
 
 
 
@@ -85,4 +86,18 @@ def compute_route(request, start_id, end_id):
     return JsonResponse({
         "route": result["path"],
         "total_distance": result["cost"]
+    })
+
+def compute_full_route(request):
+    graph = build_graph()
+    shops = list(Shop.objects.filter(is_active=True).values("id", "garbage_weight"))
+    
+    # Assuming start_node is the first shop or id 1
+    start_node = shops[0]["id"] if shops else 1
+    
+    result = generate_priority_route(graph, start_node, shops)
+    
+    return JsonResponse({
+        "route": result["route"],
+        "total_distance": result["total_cost"]
     })

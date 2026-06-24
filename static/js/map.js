@@ -12,6 +12,8 @@ L.tileLayer(
 
 const shopsLayer = L.layerGroup().addTo(map);
 const edgesLayer = L.layerGroup().addTo(map);
+const routeLayer = L.layerGroup().addTo(map);
+let shopsData = {};
 
 function loadShops() {
     fetch("/api/shops/")
@@ -19,6 +21,7 @@ function loadShops() {
         .then(data => {
             shopsLayer.clearLayers();
             data.forEach(shop => {
+                shopsData[shop.id] = shop;
                 const radius = Math.max(5, shop.garbage_weight / 10);
                 const marker = L.circleMarker([shop.lat, shop.lng], {
                     radius: radius,
@@ -52,4 +55,31 @@ function loadEdges() {
 }
 
 loadShops();
-loadEdges();
+loadEdges();
+
+document.getElementById('compute-route-btn').addEventListener('click', () => {
+    fetch("/api/route/")
+        .then(response => response.json())
+        .then(data => {
+            routeLayer.clearLayers();
+            if (data.route && data.route.length > 0) {
+                const latlngs = data.route.map(id => [shopsData[id].lat, shopsData[id].lng]);
+                
+                const routePolyline = L.polyline(latlngs, {color: 'red', weight: 5, opacity: 0.8});
+                routeLayer.addLayer(routePolyline);
+                
+                data.route.forEach((id, index) => {
+                    const shop = shopsData[id];
+                    const icon = L.divIcon({
+                        className: 'custom-div-icon',
+                        html: `<div style="background-color: white; border: 2px solid red; border-radius: 50%; width: 20px; height: 20px; text-align: center; font-weight: bold; line-height: 18px;">${index + 1}</div>`,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    });
+                    const marker = L.marker([shop.lat, shop.lng], {icon: icon});
+                    routeLayer.addLayer(marker);
+                });
+            }
+        })
+        .catch(error => console.error("Error loading route:", error));
+});
