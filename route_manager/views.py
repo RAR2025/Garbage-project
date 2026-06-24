@@ -15,8 +15,16 @@ from .route_planner import generate_priority_route
 
 
 
+from django.db.models import Sum
+
 def map_view(request):
-    return render(request, "map.html")
+    total_garbage = Shop.objects.filter(is_active=True).aggregate(Sum('garbage_weight'))['garbage_weight__sum'] or 0
+    total_shops = Shop.objects.filter(is_active=True).count()
+    context = {
+        'total_garbage': total_garbage,
+        'total_shops': total_shops,
+    }
+    return render(request, "map.html", context)
 
 class ShopListJsonView(View):
     def get(self, request, *args, **kwargs):

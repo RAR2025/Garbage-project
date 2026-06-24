@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<button id="compute-route-btn" style="position: absolute; top: 10px; right: 10px; z-index: 1000; padding: 10px; cursor: pointer;">Compute Route</button>
-<div id="map"></div>
+<div style="display: flex;">
+    <div id="sidebar" style="width: 250px; padding: 20px; background: #f8f9fa; border-right: 1px solid #ddd;">
+        <h3>Route Stats</h3>
+        <p><strong>Total Stops:</strong> <span id="stat-stops">{{ total_shops }}</span></p>
+        <p><strong>Total Garbage:</strong> <span id="stat-garbage">{{ total_garbage }}</span> kg</p>
+        <p><strong>Route Distance:</strong> <span id="stat-distance">--</span> km</p>
+        <button id="compute-route-btn" style="padding: 10px; cursor: pointer; width: 100%;">Compute Route</button>
+    </div>
+    <div id="map" style="flex-grow: 1; height: 100vh;"></div>
+</div>
 {% endblock %}
