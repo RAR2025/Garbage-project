@@ -10,55 +10,26 @@ L.tileLayer(
     }
 ).addTo(map);
 
-console.log("Script loaded");
+const shopsLayer = L.layerGroup().addTo(map);
 
-if (navigator.geolocation) {
-
-    console.log("Geolocation supported");
-
-    navigator.geolocation.getCurrentPosition(
-
-        function(position) {
-
-            console.log("Location found", position);
-
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-
-            map.setView([lat, lng], 16);
-
-            L.marker([lat, lng])
-                .addTo(map)
-                .bindPopup("You are here")
-                .openPopup();
-
-        },
-
-        function(error) {
-
-            console.error("Geolocation error:", error);
-            console.log("Code:", error.code);
-            console.log("Message:", error.message);
-
-            L.marker(THANE_NAUPADA)
-                .addTo(map)
-                .bindPopup("Could not get current location. Showing Naupada, Thane.")
-                .openPopup();
-        },
-
-        {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 300000
-        }
-    );
-
-} else {
-
-    console.log("Geolocation not supported");
-
-    L.marker(THANE_NAUPADA)
-        .addTo(map)
-        .bindPopup("Geolocation not supported. Showing Naupada, Thane.")
-        .openPopup();
+function loadShops() {
+    fetch("/api/shops/")
+        .then(response => response.json())
+        .then(data => {
+            shopsLayer.clearLayers();
+            data.forEach(shop => {
+                const radius = Math.max(5, shop.garbage_weight / 10);
+                const marker = L.circleMarker([shop.lat, shop.lng], {
+                    radius: radius,
+                    color: 'blue',
+                    fillColor: '#3388ff',
+                    fillOpacity: 0.6
+                });
+                marker.bindPopup(`<b>${shop.name}</b><br>Weight: ${shop.garbage_weight} kg`);
+                shopsLayer.addLayer(marker);
+            });
+        })
+        .catch(error => console.error("Error loading shops:", error));
 }
+
+loadShops();
