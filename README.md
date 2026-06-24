@@ -53,7 +53,7 @@ source venv/bin/activate
 ### 3. Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install django
 ```
 
 ### 4. Apply Database Migrations
