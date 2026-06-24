@@ -23,8 +23,6 @@ The system maintains a network of shops and connecting roads, tracks garbage acc
 * **Backend:** Django
 * **Database:** SQLite
 * **Algorithm:** A* Search
-* **API:** Django REST Framework (if applicable)
-
 ---
 
 ## Project Setup
