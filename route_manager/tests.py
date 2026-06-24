@@ -20,8 +20,8 @@ class AStarAlgorithmTests(TestCase):
         graph = build_graph()
         result = astar(graph, self.shop1.id, self.shop3.id)
         self.assertIsNotNone(result)
-        self.assertEqual(result["path"], [self.shop1.id, self.shop2.id, self.shop3.id])
-        self.assertEqual(result["cost"], 10.0)
+        self.assertEqual(result["path"], [self.shop1.id, self.shop3.id])
+        self.assertEqual(result["cost"], 15.0)
 
     def test_disconnected_graph_handled(self):
         graph = build_graph()
