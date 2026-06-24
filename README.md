@@ -30,7 +30,7 @@ The system maintains a network of shops and connecting roads, tracks garbage acc
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/RAR2025/Garbage-project.git
 cd Garbage-project
 ```
 
