@@ -29,11 +29,40 @@ function loadShops() {
                     fillColor: '#3388ff',
                     fillOpacity: 0.6
                 });
-                marker.bindPopup(`<b>${shop.name}</b><br>Weight: ${shop.garbage_weight} kg`);
+                const popupContent = `
+                    <b>${shop.name}</b><br>
+                    Weight: <span id="weight-text-${shop.id}">${shop.garbage_weight}</span> kg<br>
+                    <input type="number" id="weight-input-${shop.id}" value="${shop.garbage_weight}" style="width: 60px;">
+                    <button onclick="updateShopWeight(${shop.id})">Update</button><br>
+                    <a href="/shops/${shop.id}/">View Details</a>
+                `;
+                marker.bindPopup(popupContent);
                 shopsLayer.addLayer(marker);
             });
         })
         .catch(error => console.error("Error loading shops:", error));
+}
+
+function updateShopWeight(shopId) {
+    const input = document.getElementById(`weight-input-${shopId}`);
+    const newWeight = parseFloat(input.value);
+    
+    fetch(`/api/shops/${shopId}/update_weight/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ garbage_weight: newWeight })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "ok") {
+            loadShops(); // Refresh the map
+        } else {
+            console.error("Failed to update weight:", data.errors);
+        }
+    })
+    .catch(error => console.error("Error updating shop:", error));
 }
 
 function loadEdges() {

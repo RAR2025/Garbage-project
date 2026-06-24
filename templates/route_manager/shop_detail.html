@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="padding: 20px;">
+    <h2>Shop Details: {{ shop.name }}</h2>
+    <p><strong>Current Garbage Weight:</strong> {{ shop.garbage_weight }} kg</p>
+    <p><strong>Location:</strong> {{ shop.lat }}, {{ shop.lng }}</p>
+    <p><strong>Status:</strong> {% if shop.is_active %}Active{% else %}Inactive{% endif %}</p>
+    
+    <a href="{% url 'shop-update' shop.pk %}">Update Weight</a> | 
+    <a href="{% url 'map' %}">Back to Map</a>
+</div>
+{% endblock %}

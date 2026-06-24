@@ -12,4 +12,6 @@ urlpatterns = [
     path("api/edges/", views.EdgeListJsonView.as_view(), name="edge-list"),
     path("api/route/", views.compute_full_route, name="compute_full_route"),
     path("api/route/<int:start_id>/<int:end_id>/", views.compute_route, name="compute_route"),
+    path("shops/<int:pk>/", views.ShopDetailView.as_view(), name="shop-detail"),
+    path("shops/<int:pk>/update/", views.ShopUpdateView.as_view(), name="shop-update"),
 ]

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
+from django.views.generic import DetailView, UpdateView
+from django.urls import reverse_lazy
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from .models import Shop, Edge
@@ -101,3 +103,15 @@ def compute_full_route(request):
         "route": result["route"],
         "total_distance": result["total_cost"]
     })
+
+class ShopDetailView(DetailView):
+    model = Shop
+    template_name = "route_manager/shop_detail.html"
+
+class ShopUpdateView(UpdateView):
+    model = Shop
+    form_class = ShopWeightForm
+    template_name = "route_manager/shop_form.html"
+    
+    def get_success_url(self):
+        return reverse_lazy('shop-detail', kwargs={'pk': self.object.pk})
